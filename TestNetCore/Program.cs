@@ -3,20 +3,49 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace TestNetCore
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            TestDBConext testDB = new TestDBConext();
-            testDB.Database.EnsureDeleted();
-            if (testDB.Database.EnsureCreated())
+            //检查公告信息所属部门机构是否需要变更
+            //1、顺序比较 Enumerable.SequenceEqual(new int[]{1,2 }, new int[] { 2,3})，比较现在的公告信息下的部门公告信息列表与原来的是否有变化
+            //2、集合的交集，
+            //(new int[] { 1, 2 }).Intersect(new int[] { 2, 3 })  2
+            //(new int[] { 1, 2 }).Except(new int[] { 2, 3 }) 1
+
+            string str = "red house";
+            Console.WriteLine(System.Text.RegularExpressions.Regex.Replace(str, "^[a-z]", m => m.Value.ToUpper()));
+            Console.WriteLine(Regex.Replace(str, @"^\w", t => t.Value.ToUpper()));
+
+            Console.WriteLine(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower()));
+            Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("red house"));
+            if (Enumerable.SequenceEqual(new int[] { 1, 2 }, new int[] { 1, 2,4 }))
             {
-                Console.WriteLine("数据库创建成功");
+                Console.WriteLine("一样!");
             }
+            else
+            {
+                Console.WriteLine("不一样!");
+            }
+            
+            Console.WriteLine("Hello World!");
+
+            #region MyRegion
+            //TestDBConext testDB = new TestDBConext();
+            ////testDB.Database.EnsureDeleted();
+            //if (testDB.Database.EnsureCreated())
+            //{
+            //    Console.WriteLine("数据库创建成功");
+            //}
+            //testDB.Add(new StudentAA { StudentName = "9999" });
+            //testDB.SaveChanges(); 
+            #endregion
 
             #region 测试一对一
             //Person person = testDB.Find<Person>(10);
@@ -43,6 +72,15 @@ namespace TestNetCore
             Console.WriteLine("成功");
             Console.ReadLine();
         }
+
+        //public static unsafe string ToUpperFirst(this string str)
+        //{
+        //    if (str == null) return null;
+        //    string ret = string.Copy(str);
+        //    fixed (char* ptr = ret)
+        //        *ptr = char.ToUpper(*ptr);
+        //    return ret;
+        //}
     }
 
     #region EntityFrameworkCore DbContext
@@ -170,6 +208,18 @@ namespace TestNetCore
                 new StudentTeacher { StudentId = 4, TeacherId = 8 }
             };
 
+            List<StudentAA> list1 = new List<StudentAA>
+            {
+                new StudentAA { StudentId = 33, StudentName = $"StudentName 1" },
+                new StudentAA { StudentId = 244, StudentName = $"StudentName 2" },
+                new StudentAA { StudentId = 377, StudentName = $"StudentName 3" },
+                new StudentAA { StudentId = 4777, StudentName = $"StudentName 4" }
+            };
+            modelBuilder.ApplyConfiguration(new StudentAAMap());
+            ////初始化表数据
+            modelBuilder.Entity<StudentAA>().HasData(list1);
+
+
             #region 第二种EF to DB映射方式
             //创建表结构
             //////modelBuilder.Entity<Student>().HasMany(a => a.StudentTeachers).WithOne(a => a.Student).OnDelete(DeleteBehavior.Cascade)
@@ -202,6 +252,25 @@ namespace TestNetCore
 
 
     #endregion
+    public class StudentAA
+    {
+        //public int Id { get; set; }
+        public int StudentId { get; set; }
+        public string StudentName { get; set; }
+    }
+
+    public class StudentAAMap : IEntityTypeConfiguration<StudentAA>
+    {
+        public void Configure(EntityTypeBuilder<StudentAA> builder)
+        {
+            builder.ToTable(nameof(StudentAA));
+            //builder.HasKey(o => o.Id);
+            builder.HasKey(o => o.StudentId);
+            builder.Property(o => o.StudentName).HasColumnType("varchar(30)");
+            //builder.HasMany(o => o.StudentTeachers).WithOne(o => o.Student); //这里写这一句和在StudentTeacherMap对应关系一样的
+        }
+    }
+
     public class PersonMap : IEntityTypeConfiguration<Person>
     {
         public void Configure(EntityTypeBuilder<Person> builder)
