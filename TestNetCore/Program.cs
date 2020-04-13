@@ -6,13 +6,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Reflection;
+using log4net;
+using System.IO;
+using log4net.Repository;
+using log4net.Config;
 
 namespace TestNetCore
 {
     internal class Program
     {
+        //public static log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static void Main(string[] args)
         {
+            ILoggerRepository loggerRepository = LogManager.CreateRepository("TestNetCore");
+            //默认配置，这个只输出到控制台
+            BasicConfigurator.Configure(loggerRepository);
+            //指定配置文件
+            //XmlConfigurator.Configure(loggerRepository, new FileInfo("log4net.config"));
+
+            ILog Log = LogManager.GetLogger(loggerRepository.Name, typeof(Program));
+            Log.Fatal("Fatal");
+            Log.Error("Error");
+            Log.Warn("Warn");
+            Log.Info("Info");
+            Log.Debug("Debug");
+            Console.ReadLine();
+
+            #region MyRegion
+            //ILoggerRepository repository = LogManager.CreateRepository("NETCoreRepository");
+            //// 默认简单配置，输出至控制台
+            //BasicConfigurator.Configure(repository);
+            //ILog log = LogManager.GetLogger(repository.Name, "NETCorelog4net");
+
+            //log.Info("NETCorelog4net log");
+            //log.Info("test log");
+            //log.Error("error");
+            //log.Info("linezero");
+
+            //ILoggerRepository repository = LogManager.CreateRepository("NETCoreRepository");
+            //XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
+            //ILog log = LogManager.GetLogger(repository.Name, "NETCorelog4net");
+
+            //log.Info("NETCorelog4net log");
+            //log.Info("test log");
+            //log.Error("error");
+            //log.Info("linezero");
+
+            #endregion
+            #region MyRegion
             //检查公告信息所属部门机构是否需要变更
             //1、顺序比较 Enumerable.SequenceEqual(new int[]{1,2 }, new int[] { 2,3})，比较现在的公告信息下的部门公告信息列表与原来的是否有变化
             //2、集合的交集，
@@ -23,10 +65,11 @@ namespace TestNetCore
             Console.WriteLine(System.Text.RegularExpressions.Regex.Replace(str, "^[a-z]", m => m.Value.ToUpper()));
             Console.WriteLine(Regex.Replace(str, @"^\w", t => t.Value.ToUpper()));
 
-            Console.WriteLine(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower()));
+            Console.WriteLine(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower()));
+            Console.WriteLine(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase("my area"));
             Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("my area RD"));
             Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("my area"));
-            if (Enumerable.SequenceEqual(new int[] { 1, 2 }, new int[] { 1, 2,4 }))
+            if (Enumerable.SequenceEqual(new int[] { 1, 2 }, new int[] { 1, 2, 4 }))
             {
                 Console.WriteLine("一样!");
             }
@@ -34,8 +77,9 @@ namespace TestNetCore
             {
                 Console.WriteLine("不一样!");
             }
-            
+
             Console.WriteLine("Hello World!");
+            
 
             #region MyRegion
             //TestDBConext testDB = new TestDBConext();
@@ -71,6 +115,7 @@ namespace TestNetCore
             #endregion
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("成功");
+            #endregion
             Console.ReadLine();
         }
 
