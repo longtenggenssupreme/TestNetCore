@@ -20,14 +20,14 @@ namespace TestNetCore
         static void Main(string[] args)
         {
             #region  NLog
-            Logger logger = NLog.LogManager.GetCurrentClassLogger();
+            //Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-            logger.Fatal("Fatal");
-            logger.Error("Error");
-            logger.Warn("Warn");
-            logger.Info("Info");
-            logger.Debug("Debug");
-            logger.Trace("Trace");
+            //logger.Fatal("Fatal");
+            //logger.Error("Error");
+            //logger.Warn("Warn");
+            //logger.Info("Info");
+            //logger.Debug("Debug");
+            //logger.Trace("Trace");
             #endregion
             #region log4net
             //ILoggerRepository loggerRepository = LogManager.CreateRepository("TestNetCore");
