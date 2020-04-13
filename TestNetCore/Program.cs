@@ -11,26 +11,38 @@ using log4net;
 using System.IO;
 using log4net.Repository;
 using log4net.Config;
+using NLog;
 
 namespace TestNetCore
 {
     internal class Program
     {
-        //public static log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         static void Main(string[] args)
         {
-            ILoggerRepository loggerRepository = LogManager.CreateRepository("TestNetCore");
-            //默认配置，这个只输出到控制台
-            BasicConfigurator.Configure(loggerRepository);
-            //指定配置文件
-            //XmlConfigurator.Configure(loggerRepository, new FileInfo("log4net.config"));
+            #region  NLog
+            Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-            ILog Log = LogManager.GetLogger(loggerRepository.Name, typeof(Program));
-            Log.Fatal("Fatal");
-            Log.Error("Error");
-            Log.Warn("Warn");
-            Log.Info("Info");
-            Log.Debug("Debug");
+            logger.Fatal("Fatal");
+            logger.Error("Error");
+            logger.Warn("Warn");
+            logger.Info("Info");
+            logger.Debug("Debug");
+            logger.Trace("Trace");
+            #endregion
+            #region log4net
+            //ILoggerRepository loggerRepository = LogManager.CreateRepository("TestNetCore");
+            ////默认配置，这个只输出到控制台
+            //BasicConfigurator.Configure(loggerRepository);
+            ////指定配置文件
+            ////XmlConfigurator.Configure(loggerRepository, new FileInfo("log4net.config"));
+
+            //ILog Log = LogManager.GetLogger(loggerRepository.Name, typeof(Program));
+            //Log.Fatal("Fatal");
+            //Log.Error("Error");
+            //Log.Warn("Warn");
+            //Log.Info("Info");
+            //Log.Debug("Debug"); 
+            #endregion
             Console.ReadLine();
 
             #region MyRegion
@@ -79,7 +91,7 @@ namespace TestNetCore
             }
 
             Console.WriteLine("Hello World!");
-            
+
 
             #region MyRegion
             //TestDBConext testDB = new TestDBConext();

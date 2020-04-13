@@ -24,7 +24,19 @@ namespace TestNetCore
     //            //不带参数：表示log4net.config的配置文件就在应用程序根目录下，也可以指定配置文件的路径，
     //            //但是在log4net.config文件中就不需要添加configuration标签了
     //            loggingbuilder.AddLog4Net();//其他地方使用构造函数依赖注入就可以了,例如： ILogger<HomeController> logger
-    //        })
-    //        .UseStartup<Startup>();
+    //            //添加NLog
+    //            loggingbuilder.AddNLog();//其他地方使用构造函数依赖注入就可以了,例如： ILogger<HomeController> logger
+    //        }).UseStartup<Startup>();
+    //    //或者
+    //    WebHost.CreateDefaultBuilder(args)
+    //        .ConfigureLogging(logging =>
+    //        {
+    //        logging.ClearProviders();
+    //        //logging.AddDebug();
+    //        logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Warning);
+    //    })
+    //    .UseLog4net()添加Log4Net
+    //    .UseNLog()// 替换NLog作为日志管理
+    //    .UseStartup<Startup>();
     //}
 }
