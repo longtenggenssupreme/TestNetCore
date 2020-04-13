@@ -19,12 +19,13 @@ namespace TestNetCore
             //(new int[] { 1, 2 }).Intersect(new int[] { 2, 3 })  2
             //(new int[] { 1, 2 }).Except(new int[] { 2, 3 }) 1
 
-            string str = "red house";
+            string str = "this is my area";
             Console.WriteLine(System.Text.RegularExpressions.Regex.Replace(str, "^[a-z]", m => m.Value.ToUpper()));
             Console.WriteLine(Regex.Replace(str, @"^\w", t => t.Value.ToUpper()));
 
             Console.WriteLine(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower()));
-            Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("red house"));
+            Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("my area RD"));
+            Console.WriteLine(new CultureInfo("en-US").TextInfo.ToTitleCase("my area"));
             if (Enumerable.SequenceEqual(new int[] { 1, 2 }, new int[] { 1, 2,4 }))
             {
                 Console.WriteLine("一样!");
